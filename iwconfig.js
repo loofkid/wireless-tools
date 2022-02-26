@@ -21,7 +21,7 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
 
 /**
  * The **iwconfig** command is used to configure wireless network interfaces.
@@ -30,7 +30,7 @@ var child_process = require('child_process');
  * @category iwconfig
  *
  */
-var iwconfig = module.exports = {
+const iwconfig = module.exports = {
   exec: child_process.exec,
   status: status
 };
@@ -45,7 +45,7 @@ var iwconfig = module.exports = {
  * @returns {object} The parsed wireless network interface status.
  *
  */
-function parse_status_block(block) {
+const parse_status_block = (block) => {
   var match;
 
   // Skip out of the block is invalid
@@ -107,7 +107,7 @@ function parse_status_block(block) {
  * @param {function} callback The callback function.
  *
  */
-function parse_status(callback) {
+const parse_status = (callback) => {
   return function(error, stdout, stderr) {
     if (error) callback(error);
     else callback(error,
@@ -124,7 +124,7 @@ function parse_status(callback) {
  * @param {function} callback The callback function.
  *
  */
-function parse_status_interface(callback) {
+const parse_status_interface = (callback) => {
   return function(error, stdout, stderr) {
     if (error) callback(error);
     else callback(error, parse_status_block(stdout.trim()));
@@ -174,7 +174,7 @@ function parse_status_interface(callback) {
  * ]
  *
  */
-function status(interface, callback) {
+const status = (interface, callback) => {
   if (callback) {
     return this.exec('iwconfig ' + interface,
       parse_status_interface(callback));

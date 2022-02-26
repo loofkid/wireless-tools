@@ -21,7 +21,7 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
 
 /**
  * The **iw** command is used to control nl80211 radios.
@@ -30,7 +30,7 @@ var child_process = require('child_process');
  * @category iw
  *
  */
-var iw = module.exports = {
+const iw = module.exports = {
   exec: child_process.exec,
   scan: scan
 };
@@ -45,7 +45,7 @@ var iw = module.exports = {
  * @returns {string} The ssid.
  *
  */
-function has_ssid(network) {
+const has_ssid = (network) => {
   return network.ssid;
 }
 
@@ -59,7 +59,7 @@ function has_ssid(network) {
  * @returns {boolean} True if any key.
  *
  */
-function has_keys(network) {
+const has_keys = (network) => {
   return Object.keys(network).length !== 0;
 }
 
@@ -76,7 +76,7 @@ function has_keys(network) {
  * @returns {number} The comparison value.
  *
  */
-function by_signal(a, b) {
+const by_signal = (a, b) => {
   return b.signal - a.signal;
 }
 
@@ -90,7 +90,7 @@ function by_signal(a, b) {
  * @returns {object} The scanned network object.
  *
  */
-function parse_cell(cell) {
+const parse_cell = (cell) => {
   var parsed = { };
   var match;
 
@@ -148,7 +148,7 @@ function parse_cell(cell) {
  * @param {function} callback The callback function.
  *
  */
-function parse_scan(show_hidden, callback) {
+const parse_scan = (show_hidden, callback) => {
   return function(error, stdout, stderr) {
     if (error) callback(error);
     else
@@ -178,15 +178,25 @@ function parse_scan(show_hidden, callback) {
  * @param {string} interface The wireless network interface.
  * @param {function} callback The callback function.
  */
-function scan(options, callback) {
-  var interface, show_hidden
+const scan = (options, callback) => {
+  let interface, show_hidden;
   if (typeof options === 'string') {
-    var interface = options;
-    var show_hidden = false;
+    interface = options;
+    show_hidden = false;
   } else {
-    var interface = options.iface;
-    var show_hidden = options.show_hidden || false;
+    interface = options.iface;
+    show_hidden = options.show_hidden || false;
   }
 
-  this.exec('iw dev ' + interface + ' scan', parse_scan(show_hidden, callback));
+  if (callback) {
+    this.exec('iw dev ' + interface + ' scan', parse_scan(show_hidden, callback));
+  }
+  else {
+    return new Promise((resolve, reject) => {
+      scan(options, (err, networks) => {
+        if(err) reject(err);
+        resolve(networks);
+      });
+    });
+  }
 }

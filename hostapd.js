@@ -21,7 +21,7 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
 
 /**
  * The **hostpad** command is used to configure wireless access points.
@@ -30,7 +30,7 @@ var child_process = require('child_process');
  * @category hostapd
  *
  */
-var hostapd = module.exports = {
+const hostapd = module.exports = {
   exec: child_process.exec,
   disable: disable,
   enable: enable
@@ -43,7 +43,7 @@ var hostapd = module.exports = {
  * @static
  * @category hostapd
  * @param {string} interface The network interface of the access point.
- * @param {function} callback The callback function.
+ * @param {function} [callback] The callback function.
  * @returns {process} The child process.
  * @example
  *
@@ -54,11 +54,21 @@ var hostapd = module.exports = {
  * });
  *
  */
-function disable(interface, callback) {
-  var file = interface + '-hostapd.conf';
+const disable = (interface, callback) => {
+  if (callback) {
+    var file = interface + '-hostapd.conf';
 
-  return this.exec('kill `pgrep -f "^hostapd -B ' + file + '"` || true',
-    callback);
+    return this.exec('kill `pgrep -f "^hostapd -B ' + file + '"` || true',
+      callback);
+  }
+  else {
+    return new Promise((resolve, reject) => {
+      this.disable(interface, (error) => {
+        if (error) reject(error);
+        resolve();
+      });
+    });
+  }
 }
 
 /**
@@ -68,7 +78,7 @@ function disable(interface, callback) {
  * @static
  * @category hostapd
  * @param {object} options The access point configuration.
- * @param {function} callback The callback function.
+ * @param {function} [callback] The callback function.
  * @returns {process} The child process.
  * @example
  *
@@ -89,16 +99,26 @@ function disable(interface, callback) {
  * });
  *
  */
-function enable(options, callback) {
-  var file = options.interface + '-hostapd.conf';
+const enable = (options, callback) => {
+  if (callback) {
+    var file = options.interface + '-hostapd.conf';
 
-  var commands = [
-    'cat <<EOF >' + file + ' && hostapd -B ' + file + ' && rm -f ' + file
-  ];
+    var commands = [
+      'cat <<EOF >' + file + ' && hostapd -B ' + file + ' && rm -f ' + file
+    ];
 
-  Object.getOwnPropertyNames(options).forEach(function(key) {
-    commands.push(key + '=' + options[key]);
-  });
+    Object.getOwnPropertyNames(options).forEach(function(key) {
+      commands.push(key + '=' + options[key]);
+    });
 
-  return this.exec(commands.join('\n'), callback);
+    return this.exec(commands.join('\n'), callback);
+  }
+  else {
+    return new Promise((resolve, reject) => {
+      this.enable(options, (error) => {
+        if(error) reject(error);
+        resolve();
+      });
+    });
+  }
 }

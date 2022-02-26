@@ -21,7 +21,7 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
 
 /**
  * The **ifconfig** command is used to configure network interfaces.
@@ -30,7 +30,7 @@ var child_process = require('child_process');
  * @category ifconfig
  *
  */
-var ifconfig = module.exports = {
+const ifconfig = module.exports = {
   exec: child_process.exec,
   status: status,
   down: down,
@@ -47,7 +47,7 @@ var ifconfig = module.exports = {
  * @returns {object} The parsed network interface status.
  *
  */
-function parse_status_block(block) {
+const parse_status_block = (block) => {
   var match;
 
   var parsed = {
@@ -110,7 +110,7 @@ function parse_status_block(block) {
  * @param {function} callback The callback function.
  *
  */
-function parse_status(callback) {
+const parse_status = (callback) => {
   return function(error, stdout, stderr) {
     if (error) callback(error);
     else callback(error,
@@ -127,7 +127,7 @@ function parse_status(callback) {
  * @param {function} callback The callback function.
  *
  */
-function parse_status_interface(callback) {
+const parse_status_interface = (callback) => {
   return function(error, stdout, stderr) {
     if (error) callback(error);
     else callback(error, parse_status_block(stdout.trim()));
@@ -141,7 +141,7 @@ function parse_status_interface(callback) {
  * @static
  * @category ifconfig
  * @param {string} [interface] The network interface.
- * @param {function} callback The callback function.
+ * @param {function} [callback] The callback function.
  * @example
  *
  * var ifconfig = require('wireless-tools/ifconfig');
@@ -187,9 +187,25 @@ function parse_status_interface(callback) {
  * ]
  *
  */
-function status(interface, callback) {
-  if (callback) {
-    this.exec('ifconfig ' + interface, parse_status_interface(callback));  
+const status = (interface, callback) => {
+  if ((typeof interface === 'string' || interface instanceof String) && callback) {
+      this.exec('ifconfig ' + interface, parse_status_interface(callback));  
+  }
+  else if (typeof interface == 'string' || interface instanceof String) {
+    return new Promise((resolve, reject) => {
+      status(interface, (err, data) => {
+        if (err) reject(err);
+        resolve(data);
+      });
+    });
+  }
+  else if (!interface && !callback) {
+    return new Promise((resolve, reject) => {
+      status((err, data) => {
+        if (err) reject(err);
+        resolve(data);
+      });
+    });
   }
   else {
     this.exec('ifconfig -a', parse_status(interface));  
@@ -213,8 +229,18 @@ function status(interface, callback) {
  * });
  *
  */
-function down(interface, callback) {
-  return this.exec('ifconfig ' + interface + ' down', callback);
+const down = (interface, callback) => {
+  if (callback) {
+    return this.exec('ifconfig ' + interface + ' down', callback);
+  }
+  else {
+    return new Promise((resolve, reject) => {
+      down(interface, (err) => {
+        if(err) reject(err);
+        resolve();
+      })
+    })
+  }
 }
 
 /**
@@ -240,10 +266,20 @@ function down(interface, callback) {
  * });
  *
  */
-function up(options, callback) {
-  return this.exec('ifconfig ' + options.interface +
-    ' ' + options.ipv4_address +
-    ' netmask ' + options.ipv4_subnet_mask +
-    ' broadcast ' + options.ipv4_broadcast +
-    ' up', callback);
+const up = (options, callback) => {
+  if (callback) {
+    return this.exec('ifconfig ' + options.interface +
+      ' ' + options.ipv4_address +
+      ' netmask ' + options.ipv4_subnet_mask +
+      ' broadcast ' + options.ipv4_broadcast +
+      ' up', callback);
+  }
+  else {
+    return new Promise((resolve, reject) => {
+      up(options, (err) => {
+        if (err) reject(err);
+        resolve();
+      });
+    });
+  }
 }

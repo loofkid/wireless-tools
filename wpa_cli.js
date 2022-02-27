@@ -248,7 +248,7 @@ const parse_list_networks_block = (callback) => {
 const parse_list_networks_result = (block) => {
     const networksList = block.split("\n");
     networksArray = [];
-    // networksList.splice(0, 2); //Remove headers
+    networksList.splice(0, 1); //Remove headers
     // networksList.splice(networksList.length - 1, 1); //Remove footer
 
     for (const networkIndex in networksList) {

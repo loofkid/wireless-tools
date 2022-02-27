@@ -220,6 +220,52 @@ const parse_scan_results_interface = (callback) => {
     };
 }
 
+/**
+ * Parses the networks for a list_networks request.
+ *
+ * @private
+ * @static
+ * @category wpa_cli
+ * @param {function} callback The callback function.
+ *
+ */
+const parse_list_networks_block = (callback) => {
+    return (error, stdout, stderr) => {
+        if (error) callback(error);
+        else callback(error, parse_list_networks_result(stdout.trim()));
+    }
+}
+
+/**
+ * Parses the results of a list_networks request.
+ *
+ * @private
+ * @static
+ * @category wpa_cli
+ * @param {string} block The section of stdout for the interface.
+ * @returns {object[]} The parsed list_networks results.
+ */
+const parse_list_networks_result = (block) => {
+    var networksList = stdout.split("\n");
+    networksArray = [];
+    networksList.splice(0, 2); //Remove headers
+    networksList.splice(networksList.length - 1, 1); //Remove footer
+
+    for (var networkIndex in networksList) {
+        tempNetworkJson = {};
+
+        parameters = networksList[networkIndex].split("\t");
+        tempNetworkJson = {
+            network_id: parameters[0],
+            ssid: parameters[1],
+            bssid: parameters[2],
+            flags: parameters[3]
+        };
+        networksArray.push(tempNetworkJson);
+    }
+    return networksArray;
+}
+
 
 /**
  * Parses the status for wpa network interface.
@@ -330,6 +376,18 @@ const set = (interface, variable, value, callback) => {
     }
     else {
         return util.promisify(set)(interface, variable, value);
+    }
+}
+
+
+const list_networks = (interface, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i', interface, 'list_networks'].join(' ');
+
+        return child_process.exec(command, parse_list_networks_block(callback));
+    }
+    else {
+        return util.promisify(list_networks)(interface);
     }
 }
 
@@ -470,6 +528,7 @@ const save_config = (interface, callback) => {
     bssid: bssid,
     reassociate: reassociate,
     set: set,
+    list_networks: list_networks,
     add_network: add_network,
     set_network: set_network,
     enable_network: enable_network,

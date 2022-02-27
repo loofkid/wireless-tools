@@ -16,11 +16,19 @@ export interface Status {
     id: number,
 }
 
+export interface Network {
+    network_id: number;
+    ssid: string;
+    bssid: string;
+    flags: string;
+}
+
 declare interface WpaCli {
     status: typeof status,
     bssid: typeof bssid,
     reassociate: typeof reassociate,
     set: typeof set,
+    list_networks: typeof list_networks,
     add_network: typeof add_network,
     set_network: typeof set_network,
     enable_network: typeof enable_network,
@@ -37,6 +45,7 @@ export const status: (interface: string, callback?: (err: Error, status: Status)
 export const bssid: (interface: string, ap: string, ssid: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const reassociate: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const set: (interface: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const list_networks: (interface: string, callback?: (err: Error, networks: Network[]) => any) => ChildProcess | Promise<Network[]>;
 export const add_network: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const set_network: (interface: string, id: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const enable_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;

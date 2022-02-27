@@ -22,6 +22,7 @@
  */
 
 const child_process = require('child_process');
+const util = require('util')
 
 /**
  * The **ifconfig** command is used to configure network interfaces.
@@ -33,6 +34,7 @@ const child_process = require('child_process');
 const ifconfig = module.exports = {
   exec: child_process.exec,
   status: status,
+  statusAll: statusAll,
   down: down,
   up: up
 };
@@ -135,18 +137,59 @@ const parse_status_interface = (callback) => {
 }
 
 /**
- * The **ifconfig status** command is used to query the status of all
- * configured interfaces.
+ * The **ifconfig status** command is used to query the status of a single
+ * configured interface.
  *
  * @static
  * @category ifconfig
- * @param {string} [interface] The network interface.
+ * @param {string} interface The network interface.
  * @param {function} [callback] The callback function.
+ * @returns {void|Promise<Status>} Void or a promise of a Status object.
  * @example
  *
  * var ifconfig = require('wireless-tools/ifconfig');
  *
- * ifconfig.status(function(err, status) {
+ * ifconfig.status('eth0', function(err, status) {
+ *   console.log(status);
+ * });
+ *
+ * // =>
+ *   {
+ *     interface: 'eth0',
+ *     link: 'ethernet',
+ *     address: 'b8:27:eb:da:52:ad',
+ *     ipv4_address: '192.168.1.2',
+ *     ipv4_broadcast: '192.168.1.255',
+ *     ipv4_subnet_mask: '255.255.255.0',
+ *     up: true,
+ *     broadcast: true,
+ *     running: true,
+ *     multicast: true
+ *   }
+ *
+ */
+const status = (interface, callback) => {
+  if (callback) {
+      this.exec('ifconfig ' + interface, parse_status_interface(callback));  
+  }
+  else {
+    return util.promisify(status)(interface);
+  }
+}
+
+/**
+ * The **ifconfig statusAll** command is used to query the status of all
+ * configured interfaces.
+ *
+ * @static
+ * @category ifconfig
+ * @param {function} [callback] The callback function.
+ * @returns {void|Promise<Status[]>} Void or the promise of an array of Status objects.
+ * @example
+ *
+ * var ifconfig = require('wireless-tools/ifconfig');
+ *
+ * ifconfig.statusAll(function(err, status) {
  *   console.log(status);
  * });
  *
@@ -187,28 +230,12 @@ const parse_status_interface = (callback) => {
  * ]
  *
  */
-const status = (interface, callback) => {
-  if ((typeof interface === 'string' || interface instanceof String) && callback) {
-      this.exec('ifconfig ' + interface, parse_status_interface(callback));  
-  }
-  else if (typeof interface == 'string' || interface instanceof String) {
-    return new Promise((resolve, reject) => {
-      status(interface, (err, data) => {
-        if (err) reject(err);
-        resolve(data);
-      });
-    });
-  }
-  else if (!interface && !callback) {
-    return new Promise((resolve, reject) => {
-      status((err, data) => {
-        if (err) reject(err);
-        resolve(data);
-      });
-    });
+const statusAll = (callback) => {
+  if (callback) {
+    this.exec('ifconfig -a', parse_status(callback)); 
   }
   else {
-    this.exec('ifconfig -a', parse_status(interface));  
+    return util.promisify(statusAll);
   }
 }
 
@@ -218,8 +245,8 @@ const status = (interface, callback) => {
  * @static
  * @category ifconfig
  * @param {string} interface The network interface.
- * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @param {function} [callback] The callback function.
+ * @returns {process|Promise<void>} The child process or a Promise.
  * @example
  *
  * var ifconfig = require('wireless-tools/ifconfig');
@@ -234,12 +261,7 @@ const down = (interface, callback) => {
     return this.exec('ifconfig ' + interface + ' down', callback);
   }
   else {
-    return new Promise((resolve, reject) => {
-      down(interface, (err) => {
-        if(err) reject(err);
-        resolve();
-      })
-    })
+    return util.promisify(down)(interface);
   }
 }
 
@@ -250,8 +272,8 @@ const down = (interface, callback) => {
  * @static
  * @category ifconfig
  * @param {object} options The interface configuration.
- * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @param {function} [callback] The callback function.
+ * @returns {process|Promise<void>} The child process or a Promise.
  * @example
  *
  * var options = {
@@ -275,11 +297,6 @@ const up = (options, callback) => {
       ' up', callback);
   }
   else {
-    return new Promise((resolve, reject) => {
-      up(options, (err) => {
-        if (err) reject(err);
-        resolve();
-      });
-    });
+    return util.promisify(up)(options);
   }
 }

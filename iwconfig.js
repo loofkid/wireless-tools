@@ -22,6 +22,7 @@
  */
 
 const child_process = require('child_process');
+const util = require('util');
 
 /**
  * The **iwconfig** command is used to configure wireless network interfaces.
@@ -32,7 +33,8 @@ const child_process = require('child_process');
  */
 const iwconfig = module.exports = {
   exec: child_process.exec,
-  status: status
+  status: status,
+  statusAll: statusAll,
 };
 
 /**
@@ -137,13 +139,56 @@ const parse_status_interface = (callback) => {
  * @private
  * @static
  * @category iwconfig
- * @param {string} [interface] The wireless network interface.
- * @param {function} callback The callback function.
+ * @param {string} interface The wireless network interface.
+ * @param {function} [callback] The callback function.
+ * @returns {void|Promise<Status>} Void or the Promise of a Status object.
  * @example
  *
  * var iwconfig = require('wireless-tools/iwconfig');
  *
- * iwconfig.status(function(err, status) {
+ * iwconfig.status('wlan0', function(err, status) {
+ *   console.log(status);
+ * });
+ *
+ * // =>
+ * [
+ *   {
+ *     interface: 'wlan0',
+ *     access_point: '00:0b:81:95:12:21',
+ *     frequency: 2.437,
+ *     ieee: '802.11bg',
+ *     mode: 'master',
+ *     noise: 0,
+ *     quality: 77,
+ *     sensitivity: 0,
+ *     signal: 50,
+ *     ssid: 'RaspberryPi'
+ *   }
+ * ]
+ *
+ */
+const status = (interface, callback) => {
+  if (callback) {
+    return this.exec('iwconfig ' + interface,
+      parse_status_interface(callback));
+  }
+  else {
+    return util.promisify(status)(interface);
+  }
+}
+/**
+ * Parses the status for a all wireless network interfaces.
+ *
+ * @private
+ * @static
+ * @category iwconfig
+ * @param {function} [callback] The callback function.
+ * @returns {void|Promise<Status[]>} Void or the Promise of an array of Status objects.
+ * @example
+ *
+ * var iwconfig = require('wireless-tools/iwconfig');
+ *
+ * iwconfig.statusAll(function(err, status) {
  *   console.log(status);
  * });
  *
@@ -174,12 +219,11 @@ const parse_status_interface = (callback) => {
  * ]
  *
  */
-const status = (interface, callback) => {
+const statusAll = (callback) => {
   if (callback) {
-    return this.exec('iwconfig ' + interface,
-      parse_status_interface(callback));
+    return this.exec('iwconfig', parse_status(callback));
   }
   else {
-    return this.exec('iwconfig', parse_status(interface));
+    return util.promisify(statusAll);
   }
 }

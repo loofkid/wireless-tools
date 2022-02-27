@@ -21,7 +21,8 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
+const util = require('util');
 
 /**
  * The **iwlist** command is used to get detailed information from a
@@ -31,7 +32,7 @@ var child_process = require('child_process');
  * @category iwlist
  *
  */
-var iwlist = module.exports = {
+const iwlist = module.exports = {
   exec: child_process.exec,
   scan: scan
 };
@@ -46,7 +47,7 @@ var iwlist = module.exports = {
  * @returns {string} The ssid.
  *
  */
-function has_ssid(network) {
+const has_ssid = (network) => {
   return network.ssid;
 }
 
@@ -60,7 +61,7 @@ function has_ssid(network) {
  * @returns {boolean} True if any key.
  *
  */
-function has_keys(network) {
+const has_keys = (network) => {
   return Object.keys(network).length !== 0;
 }
 
@@ -77,7 +78,7 @@ function has_keys(network) {
  * @returns {number} The comparison value.
  *
  */
-function by_signal(a, b) {
+const by_signal = (a, b) => {
   return b.signal - a.signal;
 }
 
@@ -91,7 +92,7 @@ function by_signal(a, b) {
  * @returns {object} The scanned network object.
  *
  */
-function parse_cell(cell) {
+const parse_cell = (cell) => {
   var parsed = { };
   var match;
 
@@ -152,7 +153,7 @@ function parse_cell(cell) {
  * @param {function} callback The callback function.
  *
  */
-function parse_scan(show_hidden, callback) {
+const parse_scan = (show_hidden, callback) => {
   return function(error, stdout, stderr) {
     if (error) callback(error);
     else
@@ -180,7 +181,7 @@ function parse_scan(show_hidden, callback) {
  * @static
  * @category iwlist
  * @param {string} interface The wireless network interface.
- * @param {function} callback The callback function.
+ * @param {function} [callback] The callback function.
  * @example
  *
  * var iwlist = require('wireless-tools/iwlist');
@@ -290,14 +291,14 @@ function parse_scan(show_hidden, callback) {
  * ]
  *
  */
-function scan(options, callback) {
-  var interface, show_hidden
+const scan = (options, callback) => {
+  let interface, show_hidden;
   if (typeof options === 'string') {
-    var interface = options;
-    var show_hidden = false;
+    interface = options;
+    show_hidden = false;
   } else {
-    var interface = options.iface;
-    var show_hidden = options.show_hidden || false;
+    interface = options.iface;
+    show_hidden = options.show_hidden || false;
   }
 
   var extra_params = '';
@@ -305,6 +306,11 @@ function scan(options, callback) {
   if (options.ssid) {
     extra_params = ' essid ' + options.ssid;
   }
-
-  this.exec('iwlist ' + interface + ' scan' + extra_params, parse_scan(show_hidden, callback));
+  
+  if (callback) {
+    this.exec('iwlist ' + interface + ' scan' + extra_params, parse_scan(show_hidden, callback));
+  }
+  else {
+    return util.promisify(scan)(options);
+  }
 }

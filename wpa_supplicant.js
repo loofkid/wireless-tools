@@ -21,7 +21,8 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
+const util = require('util');
 
 /**
  * The **wpa_supplicant** command is used to configure a wireless
@@ -31,7 +32,7 @@ var child_process = require('child_process');
  * @category wpa_supplicant
  *
  */
-var wpa_supplicant = module.exports = {
+const wpa_supplicant = module.exports = {
   exec: child_process.exec,
   disable: disable,
   enable: enable,
@@ -46,7 +47,7 @@ var wpa_supplicant = module.exports = {
  * @category wpa_supplicant
  * @param {string} interface The network interface.
  * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var wpa_supplicant = require('wireless-tools/wpa_supplicant');
@@ -56,11 +57,16 @@ var wpa_supplicant = module.exports = {
  * });
  *
  */
-function disable(interface, callback) {
-  var command = 'kill `pgrep -f "wpa_supplicant -i ' +
-    interface + ' .*"` || true';
+const disable = (interface, callback) => {
+  if (callback) {
+    const command = 'kill `pgrep -f "wpa_supplicant -i ' +
+      interface + ' .*"` || true';
 
-  return this.exec(command, callback);
+    return this.exec(command, callback);
+  }
+  else {
+    return util.promisify(disable)(interface);
+  }
 }
 
 /**
@@ -71,7 +77,7 @@ function disable(interface, callback) {
  * @category wpa_supplicant
  * @param {object} options The wireless network configuration.
  * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var wpa_supplicant = require('wireless-tools/wpa_supplicant');
@@ -88,14 +94,19 @@ function disable(interface, callback) {
  * });
  *
  */
-function enable(options, callback) {
-  var file = options.interface + '-wpa_supplicant.conf';
+const enable = (options, callback) => {
+  if (callback) {
+    const file = options.interface + '-wpa_supplicant.conf';
 
-  var command = 'wpa_passphrase "' + options.ssid + '" "' + options.passphrase
-    + '" > ' + file + ' && wpa_supplicant -i ' + options.interface + ' -B -D '
-    + options.driver + ' -c ' + file + ' && rm -f ' + file;
+    const command = 'wpa_passphrase "' + options.ssid + '" "' + options.passphrase
+      + '" > ' + file + ' && wpa_supplicant -i ' + options.interface + ' -B -D '
+      + options.driver + ' -c ' + file + ' && rm -f ' + file;
 
-  return this.exec(command, callback);
+    return this.exec(command, callback);
+  }
+  else {
+    return util.promisify(enable)(options);
+  }
 }
 
 /**
@@ -107,16 +118,21 @@ function enable(options, callback) {
  *     drivers: [ 'nl80211', 'wext' ]
  * }
  */
-function manual(options, callback) {
-  var command = [
-    'wpa_supplicant',
-    '-i', options.interface,
-    '-s -B -P /run/wpa_supplicant/' + options.interface + '.pid',
-    '-D', options.drivers.join(','),
-    '-C /run/wpa_supplicant'
-  ].join(' ');
+const manual = (options, callback) => {
+  if (callback) {
+    const command = [
+      'wpa_supplicant',
+      '-i', options.interface,
+      '-s -B -P /run/wpa_supplicant/' + options.interface + '.pid',
+      '-D', options.drivers.join(','),
+      '-C /run/wpa_supplicant'
+    ].join(' ');
 
-  return this.exec(command, callback);
+    return this.exec(command, callback);
+  }
+  else {
+    return util.promisify(manual)(options);
+  }
 }
 
 

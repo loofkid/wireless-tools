@@ -21,7 +21,8 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
+const util = require('util');
 
 /**
  * The **udhcpc** command is used to configure a dhcp client for a
@@ -31,7 +32,7 @@ var child_process = require('child_process');
  * @category udhcpc
  *
  */
-var udhcpc = module.exports = {
+const udhcpc = module.exports = {
   exec: child_process.exec,
   disable: disable,
   enable: enable
@@ -44,8 +45,8 @@ var udhcpc = module.exports = {
  * @static
  * @category udhcpc
  * @param {string} interface The network interface.
- * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @param {function} [callback] The callback function.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var udhcpc = require('wireless-tools/udhcpc');
@@ -55,9 +56,14 @@ var udhcpc = module.exports = {
  * });
  *
  */
-function disable(interface, callback) {
-  var command = 'kill `pgrep -f "^udhcpc -i ' + interface + '"` || true';
-  return this.exec(command, callback);
+const disable = (interface, callback) => {
+  if (callback) {
+    const command = 'kill `pgrep -f "^udhcpc -i ' + interface + '"` || true';
+    return this.exec(command, callback);
+  }
+  else {
+    return util.promisify(disable)(interface);
+  }
 }
 
 /**
@@ -67,8 +73,8 @@ function disable(interface, callback) {
  * @static
  * @category udhcpc
  * @param {object} options The dhcp client configuration.
- * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @param {function} [callback] The callback function.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var udhcpc = require('wireless-tools/udhcpc');
@@ -82,7 +88,12 @@ function disable(interface, callback) {
  * });
  *
  */
-function enable(options, callback) {
-  var command = 'udhcpc -i ' + options.interface + ' -n';
-  return this.exec(command, callback);  
+const enable = (options, callback) => {
+  if (callback) {
+    const command = 'udhcpc -i ' + options.interface + ' -n';
+    return this.exec(command, callback);  
+  }
+  else {
+    return util.promisify(enable)(options);
+  }
 }

@@ -10,11 +10,13 @@ export interface Options {
     wpa_passphrase?: string,
 }
 
-export const hostapd = {
-    exec: exec,
-    disable: disable,
-    enable: enable,
+declare interface HostAPd {
+    exec: typeof exec,
+    disable: typeof disable,
+    enable: typeof enable,
 }
 
-declare const disable: (interface: string, callback?: (err: Error) => any) => NodeJS.Process | Promise<void>;
-declare const enable: (interface: Options, callback?: (err: Error) => any) => NodeJS.Process | Promise<void>;
+export const hostapd: HostAPd;
+
+export const disable: (interface: string, callback?: (err: Error) => any) => NodeJS.Process | Promise<void>;
+export const enable: (interface: Options, callback?: (err: Error) => any) => NodeJS.Process | Promise<void>;

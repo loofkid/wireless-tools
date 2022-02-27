@@ -21,7 +21,9 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
+const util = require('util');
+
 
 /**
  * The **udhcpd** command is used to configure a dhcp server for a
@@ -31,7 +33,7 @@ var child_process = require('child_process');
  * @category udhcpd
  *
  */
-var udhcpd = module.exports = {
+const udhcpd = module.exports = {
   exec: child_process.exec,
   disable: disable,
   enable: enable
@@ -48,7 +50,7 @@ var udhcpd = module.exports = {
  * @param {array) prefix The key prefix.
  *
  */
-function expand_r(options, lines, prefix) {
+const expand_r = (options, lines, prefix) => {
   Object.getOwnPropertyNames(options).forEach(function(key) {
     var full = prefix.concat(key);
     var value = options[key];
@@ -77,7 +79,7 @@ function expand_r(options, lines, prefix) {
  * @returns {array} The lines of the configuration file.
  *
  */
-function expand(options) {
+const expand = (options) => {
   var lines = [];
   expand_r(options, lines, []);
   return lines;
@@ -90,8 +92,8 @@ function expand(options) {
  * @static
  * @category udhcpd
  * @param {object} options The dhcp server configuration.
- * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @param {function} [callback] The callback function.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var udhcpd = require('wireless-tools/udhcpd');
@@ -112,14 +114,19 @@ function expand(options) {
  * });
  *
  */
-function enable(options, callback) {
-  var file = options.interface + '-udhcpd.conf';
+const enable = (options, callback) => {
+  if (callback) {
+    const file = options.interface + '-udhcpd.conf';
 
-  var commands = [].concat(
-    'cat <<EOF >' + file + ' && udhcpd ' + file + ' && rm -f ' + file,
-    expand(options));
+    const commands = [].concat(
+      'cat <<EOF >' + file + ' && udhcpd ' + file + ' && rm -f ' + file,
+      expand(options));
 
-  return this.exec(commands.join('\n'), callback);
+    return this.exec(commands.join('\n'), callback);
+  }
+  else {
+    return util.promisify(enable)(options);
+  }
 }
 
 /**
@@ -129,8 +136,8 @@ function enable(options, callback) {
  * @static
  * @category udhcpd
  * @param {string} interface The network interface.
- * @param {function} callback The callback function.
- * @returns {process} The child process.
+ * @param {function} [callback] The callback function.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var udhcpd = require('wireless-tools/udhcpd');
@@ -140,7 +147,12 @@ function enable(options, callback) {
  * });
  *
  */
-function disable(interface, callback) {
-  var file = interface + '-udhcpd.conf';
-  return this.exec('kill `pgrep -f "^udhcpd ' + file + '"` || true', callback);
+const disable = (interface, callback) => {
+  if(callback) {
+    var file = interface + '-udhcpd.conf';
+    return this.exec('kill `pgrep -f "^udhcpd ' + file + '"` || true', callback);
+  }
+  else {
+    return util.promisify(disable)(interface);
+  }
 }

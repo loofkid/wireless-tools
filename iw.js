@@ -22,6 +22,7 @@
  */
 
 const child_process = require('child_process');
+const util = require('util');
 
 /**
  * The **iw** command is used to control nl80211 radios.
@@ -175,8 +176,9 @@ const parse_scan = (show_hidden, callback) => {
  *
  * @static
  * @category iw
- * @param {string} interface The wireless network interface.
- * @param {function} callback The callback function.
+ * @param {string|object} options The wireless network interface.
+ * @param {function} [callback] The callback function.
+ * @returns {void|Promise<Network[]>} Void or a Promise of Network objects.
  */
 const scan = (options, callback) => {
   let interface, show_hidden;
@@ -192,11 +194,6 @@ const scan = (options, callback) => {
     this.exec('iw dev ' + interface + ' scan', parse_scan(show_hidden, callback));
   }
   else {
-    return new Promise((resolve, reject) => {
-      scan(options, (err, networks) => {
-        if(err) reject(err);
-        resolve(networks);
-      });
-    });
+    return util.promisify(scan)(options);
   }
 }

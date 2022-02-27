@@ -21,13 +21,17 @@ export interface Options {
     ipv4_subnet_mask: string,
 }
 
-export const ifconfig = {
-    exec: exec,
-    status: status,
-    down: down,
-    up: up,
+declare interface IfConfig {
+    exec: typeof exec,
+    status: typeof status,
+    statusAll: typeof statusAll,
+    down: typeof down,
+    up: typeof up,
 }
 
-declare const status: (interface?: string | ((err: Error, data: Status) => any), callback?: (err: Error, data: Status) => any) => Promise<Status> | void;
-declare const down: (interface: string, callback?: (err: Error) => any) => Promise<void> | void;
-declare const up: (options: Options, callback?: (err: Error) => any) => Promise<void> | void;
+export const ifconfig: IfConfig;
+
+export const status: (interface: string, callback?: (err: Error, data: Status) => any) => Promise<Status> | void;
+export const statusAll: (callback?: (err: Error, data: Status[]) => any) => Promise<Status> | void;
+export const down: (interface: string, callback?: (err: Error) => any) => Promise<void> | void;
+export const up: (options: Options, callback?: (err: Error) => any) => Promise<void> | void;

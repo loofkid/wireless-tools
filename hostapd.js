@@ -22,6 +22,7 @@
  */
 
 const child_process = require('child_process');
+const util = require('util')
 
 /**
  * The **hostpad** command is used to configure wireless access points.
@@ -33,7 +34,7 @@ const child_process = require('child_process');
 const hostapd = module.exports = {
   exec: child_process.exec,
   disable: disable,
-  enable: enable
+  enable: enable,
 };
 
 /**
@@ -44,7 +45,7 @@ const hostapd = module.exports = {
  * @category hostapd
  * @param {string} interface The network interface of the access point.
  * @param {function} [callback] The callback function.
- * @returns {process} The child process.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var hostapd = require('wireless-tools/hostapd');
@@ -62,12 +63,7 @@ const disable = (interface, callback) => {
       callback);
   }
   else {
-    return new Promise((resolve, reject) => {
-      this.disable(interface, (error) => {
-        if (error) reject(error);
-        resolve();
-      });
-    });
+    return util.promisify(disable)(interface);
   }
 }
 
@@ -79,7 +75,7 @@ const disable = (interface, callback) => {
  * @category hostapd
  * @param {object} options The access point configuration.
  * @param {function} [callback] The callback function.
- * @returns {process} The child process.
+ * @returns {process|Promise<void>} The child process.
  * @example
  *
  * var hostapd = require('wireless-tools/hostapd');
@@ -114,11 +110,6 @@ const enable = (options, callback) => {
     return this.exec(commands.join('\n'), callback);
   }
   else {
-    return new Promise((resolve, reject) => {
-      this.enable(options, (error) => {
-        if(error) reject(error);
-        resolve();
-      });
-    });
+    return util.promisify(enable)(options);
   }
 }

@@ -21,7 +21,8 @@
  *
  */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
+const util = require('util');
 
 /**
  * The **wpa_cli** command is used to configure wpa network interfaces.
@@ -30,7 +31,7 @@ var child_process = require('child_process');
  * @category wpa_cli
  *
  */
-var wpa_cli = module.exports = {
+const wpa_cli = module.exports = {
     exec: child_process.exec,
     status: status,
     bssid: bssid,
@@ -57,7 +58,7 @@ var wpa_cli = module.exports = {
  * @returns {object} The parsed wpa status.
  *
  */
-function parse_status_block(block) {
+const parse_status_block = (block) => {
     var match;
 
     var parsed = {};
@@ -126,7 +127,7 @@ function parse_status_block(block) {
  * @returns {object} The parsed wpa command result.
  *
  */
-function parse_command_block(block) {
+const parse_command_block = (block) => {
     var match;
 
     var parsed = {
@@ -145,7 +146,7 @@ function parse_command_block(block) {
  * @param {function} callback The callback function.
  *
  */
-function parse_status_interface(callback) {
+const parse_status_interface = (callback) => {
     return function(error, stdout, stderr) {
         if (error) {
             callback(error);
@@ -164,7 +165,7 @@ function parse_status_interface(callback) {
  * @param {function} callback The callback function.
  *
  */
-function parse_command_interface(callback) {
+const parse_command_interface = (callback) => {
     return function(error, stdout, stderr) {
         if (error) {
             callback(error);
@@ -188,7 +189,7 @@ function parse_command_interface(callback) {
  * @param {string} block The section of stdout for the interface.
  * @returns {object} The parsed scan results.
  */
-function parse_scan_results(block) {
+const parse_scan_results = (block) => {
     var match;
     var results = [];
     var lines;
@@ -233,7 +234,7 @@ function parse_scan_results(block) {
  * @param {function} callback The callback function.
  *
  */
-function parse_scan_results_interface(callback) {
+const parse_scan_results_interface = (callback) => {
     return function(error, stdout, stderr) {
         if (error) {
             callback(error);
@@ -250,8 +251,8 @@ function parse_scan_results_interface(callback) {
  * @private
  * @static
  * @category wpa
- * @param {string} [interface] The wireless network interface.
- * @param {function} callback The callback function.
+ * @param {string} interface The wireless network interface.
+ * @param {function} [callback] The callback function.
  * @example
  *
  * var wpa_cli = require('wireless-tools/wpa_cli');
@@ -297,22 +298,37 @@ function parse_scan_results_interface(callback) {
  * OK
  *
  */
-function status(interface, callback) {
-    var command = [ 'wpa_cli -i', interface, 'status'].join(' ');
-    return this.exec(command, parse_status_interface(callback));
+const status = (interface, callback) => {
+    if (callback) {
+        const command = [ 'wpa_cli -i', interface, 'status'].join(' ');
+        return this.exec(command, parse_status_interface(callback));
+    }
+    else {
+        return util.promisify(status)(interface);
+    }
 }
 
-function bssid(interface, ap, ssid, callback) {
-    var command = ['wpa_cli -i', interface, 'bssid', ssid, ap].join(' ');
-    return this.exec(command, parse_command_interface(callback));
+const bssid = (interface, ap, ssid, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i', interface, 'bssid', ssid, ap].join(' ');
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(bssid)(interface, ap, ssid);
+    }
 }
 
-function reassociate(interface, callback) {
-    var command = ['wpa_cli -i',
-                 interface,
-                 'reassociate'].join(' ');
+const reassociate = (interface, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+            interface,
+            'reassociate'].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(reassociate)(interface);
+    }
 }
 
 /* others commands not tested
@@ -326,91 +342,141 @@ function reassociate(interface, callback) {
     // enable_network: enable_network
 */
 
-function set(interface, variable, value, callback) {
-    var command = ['wpa_cli -i',
-                 interface,
-                 'set',
-                 variable,
-                 value ].join(' ');
+const set = (interface, variable, value, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+            interface,
+            'set',
+            variable,
+            value ].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(set)(interface, variable, value);
+    }
 }
 
-function add_network(interface, callback) {
-    var command = ['wpa_cli -i',
-                 interface,
-                 'add_network' ].join(' ');
+const add_network = (interface, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+                    interface,
+                    'add_network' ].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(add_network)(interface);
+    }
 }
 
-function set_network(interface, id, variable, value, callback) {
-    var command = ['wpa_cli -i',
-                 interface,
-                 'set_network',
-                 id,
-                 variable,
-                 value ].join(' ');
+const set_network = (interface, id, variable, value, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+                    interface,
+                    'set_network',
+                    id,
+                    variable,
+                    value ].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(set_network)(interface, id, variable, value);
+    }
 }
 
-function enable_network(interface, id, callback) {
-    var command = ['wpa_cli -i',
-                 interface,
-                 'enable_network',
-                 id ].join(' ');
+const enable_network = (interface, id, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+                    interface,
+                    'enable_network',
+                    id ].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(enable_network)(interface, id);
+    }
 }
 
-function disable_network(interface, id, callback) {
-    var command = ['wpa_cli -i',
-                 interface,
-                 'disable_network',
-                 id ].join(' ');
+const disable_network = (interface, id, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+                    interface,
+                    'disable_network',
+                    id ].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(disable_network)(interface, id);
+    }
 }
 
-function remove_network(interface, id, callback) {
-    var command = ['wpa_cli -i',
-                 interface,
-                 'remove_network',
-                 id ].join(' ');
+const remove_network = (interface, id, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+                    interface,
+                    'remove_network',
+                    id ].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(remove_network)(interface, id);
+    }
 }
 
-function select_network(interface, id, callback) {
-    var command = ['wpa_cli -i',
-        interface,
-        'select_network',
-        id ].join(' ');
+const select_network = (interface, id, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+            interface,
+            'select_network',
+            id ].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(select_network)(interface, id);
+    }
 }
 
-function scan(interface, callback) {
-    var command = ['wpa_cli -i',
-        interface,
-        'scan'].join(' ');
+const scan = (interface, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+            interface,
+            'scan'].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(scan)(interface);
+    }
 }
 
-function scan_results(interface, callback) {
-    var command = ['wpa_cli -i',
-        interface,
-        'scan_results'].join(' ');
+const scan_results = (interface, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+            interface,
+            'scan_results'].join(' ');
 
-    return this.exec(command, parse_scan_results_interface(callback));
+        return this.exec(command, parse_scan_results_interface(callback));
+    }
+    else {
+        return util.promisify(scan_results)(interface);
+    }
 }
 
-function save_config(interface, callback) {
-    var command = ['wpa_cli -i',
-        interface,
-        'save_config'].join(' ');
+const save_config = (interface, callback) => {
+    if (callback) {
+        const command = ['wpa_cli -i',
+            interface,
+            'save_config'].join(' ');
 
-    return this.exec(command, parse_command_interface(callback));
+        return this.exec(command, parse_command_interface(callback));
+    }
+    else {
+        return util.promisify(save_config)(interface);
+    }
 }

@@ -15,9 +15,11 @@ export interface Options {
     show_hidden: boolean,
 }
 
-export const iw = {
-    exec: exec,
-    scan: scan,
+declare interface Iw {
+    exec: typeof exec,
+    scan: typeof scan,
 }
+
+export const iw: Iw;
 
 export const scan: (options: string | Options, callback?: (err: Error, networks: Network[]) => any) => Promise<void> | void;

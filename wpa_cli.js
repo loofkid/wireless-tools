@@ -246,7 +246,7 @@ const parse_list_networks_block = (callback) => {
  * @returns {object[]} The parsed list_networks results.
  */
 const parse_list_networks_result = (block) => {
-    var networksList = stdout.split("\n");
+    var networksList = block.split("\n");
     networksArray = [];
     networksList.splice(0, 2); //Remove headers
     networksList.splice(networksList.length - 1, 1); //Remove footer

@@ -24,21 +24,6 @@
 const child_process = require('child_process');
 const util = require('util');
 
-
-/**
- * The **udhcpd** command is used to configure a dhcp server for a
- * network interface.
- *
- * @static
- * @category udhcpd
- *
- */
-const udhcpd = module.exports = {
-  exec: child_process.exec,
-  disable: disable,
-  enable: enable
-};
-
 /**
  * Recursively expand `options` into `lines` with a `prefix`.
  *
@@ -122,7 +107,7 @@ const enable = (options, callback) => {
       'cat <<EOF >' + file + ' && udhcpd ' + file + ' && rm -f ' + file,
       expand(options));
 
-    return this.exec(commands.join('\n'), callback);
+    return child_process.exec(commands.join('\n'), callback);
   }
   else {
     return util.promisify(enable)(options);
@@ -150,9 +135,23 @@ const enable = (options, callback) => {
 const disable = (interface, callback) => {
   if(callback) {
     var file = interface + '-udhcpd.conf';
-    return this.exec('kill `pgrep -f "^udhcpd ' + file + '"` || true', callback);
+    return child_process.exec('kill `pgrep -f "^udhcpd ' + file + '"` || true', callback);
   }
   else {
     return util.promisify(disable)(interface);
   }
+}
+
+/**
+ * The **udhcpd** command is used to configure a dhcp server for a
+ * network interface.
+ *
+ * @static
+ * @category udhcpd
+ *
+ */
+ const udhcpd = module.exports = {
+  exec: child_process.exec,
+  disable: disable,
+  enable: enable
 }

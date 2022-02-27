@@ -1,5 +1,3 @@
-import {exec} from 'child_process';
-
 export interface Network {
     address: string,
     frequency: number,
@@ -16,7 +14,6 @@ export interface Options {
 }
 
 declare interface Iw {
-    exec: typeof exec,
     scan: typeof scan,
 }
 

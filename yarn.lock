@@ -74,6 +74,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@loofkid/wireless-tools@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@loofkid/wireless-tools@workspace:."
+  dependencies:
+    codeclimate-test-reporter: ^0.5.1
+    istanbul: ^0.4.5
+    mocha: ^9.2.1
+    npm-package-update: ^1.0.2
+    should: ^13.2.3
+    xo: ^0.48.0
+  languageName: unknown
+  linkType: soft
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -4826,19 +4839,6 @@ __metadata:
   checksum: d5fc37cd561f9daee3c80e03b92ed3e84d80dde3365a8767263d03dacfc8fa06b065ffe1df00d8c2a09f731482fcacae745abfbb478d4af36d0a891fad4834d3
   languageName: node
   linkType: hard
-
-"wireless-tools@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "wireless-tools@workspace:."
-  dependencies:
-    codeclimate-test-reporter: ^0.5.1
-    istanbul: ^0.4.5
-    mocha: ^9.2.1
-    npm-package-update: ^1.0.2
-    should: ^13.2.3
-    xo: ^0.48.0
-  languageName: unknown
-  linkType: soft
 
 "word-wrap@npm:^1.2.3, word-wrap@npm:~1.2.3":
   version: 1.2.3

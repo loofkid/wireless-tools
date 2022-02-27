@@ -1,4 +1,4 @@
-import {exec, ChildProcess} from 'child_process';
+import {ChildProcess} from 'child_process';
 
 export interface Options {
     interface: string,
@@ -12,8 +12,8 @@ export interface Options {
 }
 
 declare interface UdhcpD {
-    exec: typeof exec,
-
+    enable: typeof enable,
+    disable: typeof disable,
 }
 
 export const udhcpd: UdhcpD;

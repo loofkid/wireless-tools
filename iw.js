@@ -25,18 +25,6 @@ const child_process = require('child_process');
 const util = require('util');
 
 /**
- * The **iw** command is used to control nl80211 radios.
- *
- * @static
- * @category iw
- *
- */
-const iw = module.exports = {
-  exec: child_process.exec,
-  scan: scan
-};
-
-/**
  * Returns a truthy if the network has an ssid; falsy otherwise.
  *
  * @private
@@ -191,9 +179,20 @@ const scan = (options, callback) => {
   }
 
   if (callback) {
-    this.exec('iw dev ' + interface + ' scan', parse_scan(show_hidden, callback));
+    child_process.exec('iw dev ' + interface + ' scan', parse_scan(show_hidden, callback));
   }
   else {
     return util.promisify(scan)(options);
   }
 }
+
+/**
+ * The **iw** command is used to control nl80211 radios.
+ *
+ * @static
+ * @category iw
+ *
+ */
+ const iw = module.exports = {
+  scan: scan
+};

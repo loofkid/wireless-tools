@@ -25,30 +25,6 @@ const child_process = require('child_process');
 const util = require('util');
 
 /**
- * The **wpa_cli** command is used to configure wpa network interfaces.
- *
- * @private
- * @category wpa_cli
- *
- */
-const wpa_cli = module.exports = {
-    exec: child_process.exec,
-    status: status,
-    bssid: bssid,
-    reassociate: reassociate,
-    set: set,
-    add_network: add_network,
-    set_network: set_network,
-    enable_network: enable_network,
-    disable_network: disable_network,
-    remove_network: remove_network,
-    select_network: select_network,
-    scan: scan,
-    scan_results: scan_results,
-    save_config: save_config
-};
-
-/**
  * Parses the status for a wpa network interface.
  *
  * @private
@@ -301,7 +277,7 @@ const parse_scan_results_interface = (callback) => {
 const status = (interface, callback) => {
     if (callback) {
         const command = [ 'wpa_cli -i', interface, 'status'].join(' ');
-        return this.exec(command, parse_status_interface(callback));
+        return child_process.exec(command, parse_status_interface(callback));
     }
     else {
         return util.promisify(status)(interface);
@@ -311,7 +287,7 @@ const status = (interface, callback) => {
 const bssid = (interface, ap, ssid, callback) => {
     if (callback) {
         const command = ['wpa_cli -i', interface, 'bssid', ssid, ap].join(' ');
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(bssid)(interface, ap, ssid);
@@ -324,7 +300,7 @@ const reassociate = (interface, callback) => {
             interface,
             'reassociate'].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(reassociate)(interface);
@@ -350,7 +326,7 @@ const set = (interface, variable, value, callback) => {
             variable,
             value ].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(set)(interface, variable, value);
@@ -363,7 +339,7 @@ const add_network = (interface, callback) => {
                     interface,
                     'add_network' ].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(add_network)(interface);
@@ -379,7 +355,7 @@ const set_network = (interface, id, variable, value, callback) => {
                     variable,
                     value ].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(set_network)(interface, id, variable, value);
@@ -393,7 +369,7 @@ const enable_network = (interface, id, callback) => {
                     'enable_network',
                     id ].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(enable_network)(interface, id);
@@ -407,7 +383,7 @@ const disable_network = (interface, id, callback) => {
                     'disable_network',
                     id ].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(disable_network)(interface, id);
@@ -421,7 +397,7 @@ const remove_network = (interface, id, callback) => {
                     'remove_network',
                     id ].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(remove_network)(interface, id);
@@ -435,7 +411,7 @@ const select_network = (interface, id, callback) => {
             'select_network',
             id ].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(select_network)(interface, id);
@@ -448,7 +424,7 @@ const scan = (interface, callback) => {
             interface,
             'scan'].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(scan)(interface);
@@ -461,7 +437,7 @@ const scan_results = (interface, callback) => {
             interface,
             'scan_results'].join(' ');
 
-        return this.exec(command, parse_scan_results_interface(callback));
+        return child_process.exec(command, parse_scan_results_interface(callback));
     }
     else {
         return util.promisify(scan_results)(interface);
@@ -474,9 +450,33 @@ const save_config = (interface, callback) => {
             interface,
             'save_config'].join(' ');
 
-        return this.exec(command, parse_command_interface(callback));
+        return child_process.exec(command, parse_command_interface(callback));
     }
     else {
         return util.promisify(save_config)(interface);
     }
 }
+
+/**
+ * The **wpa_cli** command is used to configure wpa network interfaces.
+ *
+ * @private
+ * @category wpa_cli
+ *
+ */
+ const wpa_cli = module.exports = {
+    exec: child_process.exec,
+    status: status,
+    bssid: bssid,
+    reassociate: reassociate,
+    set: set,
+    add_network: add_network,
+    set_network: set_network,
+    enable_network: enable_network,
+    disable_network: disable_network,
+    remove_network: remove_network,
+    select_network: select_network,
+    scan: scan,
+    scan_results: scan_results,
+    save_config: save_config
+};

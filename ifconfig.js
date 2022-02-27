@@ -25,21 +25,6 @@ const child_process = require('child_process');
 const util = require('util')
 
 /**
- * The **ifconfig** command is used to configure network interfaces.
- *
- * @static
- * @category ifconfig
- *
- */
-const ifconfig = module.exports = {
-  exec: child_process.exec,
-  status: status,
-  statusAll: statusAll,
-  down: down,
-  up: up
-};
-
-/**
  * Parses the status for a single network interface.
  *
  * @private
@@ -170,7 +155,7 @@ const parse_status_interface = (callback) => {
  */
 const status = (interface, callback) => {
   if (callback) {
-      this.exec('ifconfig ' + interface, parse_status_interface(callback));  
+      child_process.exec('ifconfig ' + interface, parse_status_interface(callback));  
   }
   else {
     return util.promisify(status)(interface);
@@ -232,7 +217,7 @@ const status = (interface, callback) => {
  */
 const statusAll = (callback) => {
   if (callback) {
-    this.exec('ifconfig -a', parse_status(callback)); 
+    child_process.exec('ifconfig -a', parse_status(callback)); 
   }
   else {
     return util.promisify(statusAll);
@@ -258,7 +243,7 @@ const statusAll = (callback) => {
  */
 const down = (interface, callback) => {
   if (callback) {
-    return this.exec('ifconfig ' + interface + ' down', callback);
+    return child_process.exec('ifconfig ' + interface + ' down', callback);
   }
   else {
     return util.promisify(down)(interface);
@@ -290,7 +275,7 @@ const down = (interface, callback) => {
  */
 const up = (options, callback) => {
   if (callback) {
-    return this.exec('ifconfig ' + options.interface +
+    return child_process.exec('ifconfig ' + options.interface +
       ' ' + options.ipv4_address +
       ' netmask ' + options.ipv4_subnet_mask +
       ' broadcast ' + options.ipv4_broadcast +
@@ -300,3 +285,17 @@ const up = (options, callback) => {
     return util.promisify(up)(options);
   }
 }
+
+/**
+ * The **ifconfig** command is used to configure network interfaces.
+ *
+ * @static
+ * @category ifconfig
+ *
+ */
+ const ifconfig = module.exports = {
+  status: status,
+  statusAll: statusAll,
+  down: down,
+  up: up
+};

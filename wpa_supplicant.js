@@ -25,21 +25,6 @@ const child_process = require('child_process');
 const util = require('util');
 
 /**
- * The **wpa_supplicant** command is used to configure a wireless
- * network connection for a network interface.
- *
- * @static
- * @category wpa_supplicant
- *
- */
-const wpa_supplicant = module.exports = {
-  exec: child_process.exec,
-  disable: disable,
-  enable: enable,
-  manual: manual
-};
-
-/**
  * The **wpa_supplicant disable** command is used to disconnect from
  * a wireless network on a specific network interface.
  *
@@ -62,7 +47,7 @@ const disable = (interface, callback) => {
     const command = 'kill `pgrep -f "wpa_supplicant -i ' +
       interface + ' .*"` || true';
 
-    return this.exec(command, callback);
+    return child_process.exec(command, callback);
   }
   else {
     return util.promisify(disable)(interface);
@@ -102,7 +87,7 @@ const enable = (options, callback) => {
       + '" > ' + file + ' && wpa_supplicant -i ' + options.interface + ' -B -D '
       + options.driver + ' -c ' + file + ' && rm -f ' + file;
 
-    return this.exec(command, callback);
+    return child_process.exec(command, callback);
   }
   else {
     return util.promisify(enable)(options);
@@ -128,11 +113,24 @@ const manual = (options, callback) => {
       '-C /run/wpa_supplicant'
     ].join(' ');
 
-    return this.exec(command, callback);
+    return child_process.exec(command, callback);
   }
   else {
     return util.promisify(manual)(options);
   }
 }
 
-
+/**
+ * The **wpa_supplicant** command is used to configure a wireless
+ * network connection for a network interface.
+ *
+ * @static
+ * @category wpa_supplicant
+ *
+ */
+ const wpa_supplicant = module.exports = {
+  exec: child_process.exec,
+  disable: disable,
+  enable: enable,
+  manual: manual
+};

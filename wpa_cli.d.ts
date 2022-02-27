@@ -1,4 +1,4 @@
-import {exec, ChildProcess} from 'child_process';
+import {ChildProcess} from 'child_process';
 
 export interface Status {
     bssid: string,
@@ -17,7 +17,6 @@ export interface Status {
 }
 
 declare interface WpaCli {
-    exec: typeof exec,
     status: typeof status,
     bssid: typeof bssid,
     reassociate: typeof reassociate,

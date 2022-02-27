@@ -25,19 +25,6 @@ const child_process = require('child_process');
 const util = require('util');
 
 /**
- * The **iwconfig** command is used to configure wireless network interfaces.
- *
- * @private
- * @category iwconfig
- *
- */
-const iwconfig = module.exports = {
-  exec: child_process.exec,
-  status: status,
-  statusAll: statusAll,
-};
-
-/**
  * Parses the status for a single wireless network interface.
  *
  * @private
@@ -169,7 +156,7 @@ const parse_status_interface = (callback) => {
  */
 const status = (interface, callback) => {
   if (callback) {
-    return this.exec('iwconfig ' + interface,
+    return child_process.exec('iwconfig ' + interface,
       parse_status_interface(callback));
   }
   else {
@@ -221,9 +208,21 @@ const status = (interface, callback) => {
  */
 const statusAll = (callback) => {
   if (callback) {
-    return this.exec('iwconfig', parse_status(callback));
+    return child_process.exec('iwconfig', parse_status(callback));
   }
   else {
     return util.promisify(statusAll);
   }
 }
+
+/**
+ * The **iwconfig** command is used to configure wireless network interfaces.
+ *
+ * @private
+ * @category iwconfig
+ *
+ */
+ const iwconfig = module.exports = {
+  status: status,
+  statusAll: statusAll,
+};

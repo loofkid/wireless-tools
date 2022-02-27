@@ -25,19 +25,6 @@ const child_process = require('child_process');
 const util = require('util')
 
 /**
- * The **hostpad** command is used to configure wireless access points.
- *
- * @static
- * @category hostapd
- *
- */
-const hostapd = module.exports = {
-  exec: child_process.exec,
-  disable: disable,
-  enable: enable,
-};
-
-/**
  * The **hostpad disable** command is used to stop hosting an access point
  * on a specific wireless interface.
  *
@@ -59,7 +46,7 @@ const disable = (interface, callback) => {
   if (callback) {
     var file = interface + '-hostapd.conf';
 
-    return this.exec('kill `pgrep -f "^hostapd -B ' + file + '"` || true',
+    return child_process.exec('kill `pgrep -f "^hostapd -B ' + file + '"` || true',
       callback);
   }
   else {
@@ -107,9 +94,21 @@ const enable = (options, callback) => {
       commands.push(key + '=' + options[key]);
     });
 
-    return this.exec(commands.join('\n'), callback);
+    return child_process.exec(commands.join('\n'), callback);
   }
   else {
     return util.promisify(enable)(options);
   }
 }
+
+/**
+ * The **hostpad** command is used to configure wireless access points.
+ *
+ * @static
+ * @category hostapd
+ *
+ */
+ const hostapd = module.exports = {
+  disable: disable,
+  enable: enable,
+};

@@ -1,5 +1,3 @@
-import {exec} from 'child_process';
-
 export interface Network {
     address: string,
     ssid?: string,
@@ -18,7 +16,6 @@ export interface Options {
 }
 
 declare interface IwList {
-    exec: typeof exec,
     scan: typeof scan,
 }
 

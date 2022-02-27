@@ -1,11 +1,10 @@
-import {exec, type ChildProcess} from 'child_process';
+import {ChildProcess} from 'child_process';
 
 export interface Options {
     interface: string,
 }
 
 declare interface UdhcpC {
-    exec: typeof exec,
     disable: typeof disable,
     enable: typeof enable,
 }

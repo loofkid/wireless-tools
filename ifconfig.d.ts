@@ -1,5 +1,3 @@
-import {exec} from 'child_process';
-
 export interface Status {
     interface: string,
     link: string,
@@ -22,7 +20,6 @@ export interface Options {
 }
 
 declare interface IfConfig {
-    exec: typeof exec,
     status: typeof status,
     statusAll: typeof statusAll,
     down: typeof down,

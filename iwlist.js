@@ -25,19 +25,6 @@ const child_process = require('child_process');
 const util = require('util');
 
 /**
- * The **iwlist** command is used to get detailed information from a
- * wireless interface.
- *
- * @static
- * @category iwlist
- *
- */
-const iwlist = module.exports = {
-  exec: child_process.exec,
-  scan: scan
-};
-
-/**
  * Returns a truthy if the network has an ssid; falsy otherwise.
  *
  * @private
@@ -308,9 +295,21 @@ const scan = (options, callback) => {
   }
   
   if (callback) {
-    this.exec('iwlist ' + interface + ' scan' + extra_params, parse_scan(show_hidden, callback));
+    child_process.exec('iwlist ' + interface + ' scan' + extra_params, parse_scan(show_hidden, callback));
   }
   else {
     return util.promisify(scan)(options);
   }
 }
+
+/**
+ * The **iwlist** command is used to get detailed information from a
+ * wireless interface.
+ *
+ * @static
+ * @category iwlist
+ *
+ */
+ const iwlist = module.exports = {
+  scan: scan
+};

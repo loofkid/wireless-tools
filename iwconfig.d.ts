@@ -1,4 +1,4 @@
-import {exec, type ChildProcess} from 'child_process';
+import {ChildProcess} from 'child_process';
 
 export interface Status {
     interface: string,
@@ -15,7 +15,6 @@ export interface Status {
 }
 
 declare interface IwConfig {
-    exec: typeof exec,
     status: typeof status,
     statusAll: typeof statusAll,
 }

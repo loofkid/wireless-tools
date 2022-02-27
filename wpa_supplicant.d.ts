@@ -1,4 +1,4 @@
-import {exec, ChildProcess} from 'child_process';
+import {ChildProcess} from 'child_process';
 
 export interface EnableOptions {
     interface: string,
@@ -13,8 +13,9 @@ export interface ManualOptions {
 }
 
 declare interface WpaSupplicant {
-    exec: typeof exec,
-
+    disable: typeof disable,
+    enable: typeof enable,
+    manual: typeof manual,
 }
 
 export const wpa_supplicant: WpaSupplicant;

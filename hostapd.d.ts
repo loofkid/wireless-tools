@@ -1,5 +1,3 @@
-import {exec} from 'child_process';
-
 export interface Options {
     channel: number,
     driver: string,
@@ -11,7 +9,6 @@ export interface Options {
 }
 
 declare interface HostAPd {
-    exec: typeof exec,
     disable: typeof disable,
     enable: typeof enable,
 }

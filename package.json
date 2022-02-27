@@ -1,10 +1,10 @@
 {
-  "name": "wireless-tools",
+  "name": "@loofkid/wireless-tools",
   "version": "0.19.0",
   "description": "Wireless tools for Node.js",
-  "author": "Christopher M. Baker",
+  "author": "Christopher M. Baker, Kent Loofbourrow",
   "license": "MIT",
-  "homepage": "https://github.com/bakerface/wireless-tools",
+  "homepage": "https://github.com/loofkid/wireless-tools",
   "main": "wireless-tools.js",
   "keywords": [
     "wireless",
@@ -20,10 +20,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bakerface/wireless-tools.git"
+    "url": "https://github.com/loofkid/wireless-tools.git"
   },
   "bugs": {
-    "url": "https://github.com/bakerface/wireless-tools/issues"
+    "url": "https://github.com/loofkid/wireless-tools/issues"
   },
   "scripts": {
     "test": "istanbul cover node_modules/.bin/_mocha",

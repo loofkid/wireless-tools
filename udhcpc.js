@@ -25,20 +25,6 @@ const child_process = require('child_process');
 const util = require('util');
 
 /**
- * The **udhcpc** command is used to configure a dhcp client for a
- * network interface.
- *
- * @static
- * @category udhcpc
- *
- */
-const udhcpc = module.exports = {
-  exec: child_process.exec,
-  disable: disable,
-  enable: enable
-};
-
-/**
  * The **udhcpc disable** command is used to stop a dhcp client on a
  * specific network interface.
  *
@@ -59,7 +45,7 @@ const udhcpc = module.exports = {
 const disable = (interface, callback) => {
   if (callback) {
     const command = 'kill `pgrep -f "^udhcpc -i ' + interface + '"` || true';
-    return this.exec(command, callback);
+    return child_process.exec(command, callback);
   }
   else {
     return util.promisify(disable)(interface);
@@ -91,9 +77,23 @@ const disable = (interface, callback) => {
 const enable = (options, callback) => {
   if (callback) {
     const command = 'udhcpc -i ' + options.interface + ' -n';
-    return this.exec(command, callback);  
+    return child_process.exec(command, callback);  
   }
   else {
     return util.promisify(enable)(options);
   }
 }
+
+/**
+ * The **udhcpc** command is used to configure a dhcp client for a
+ * network interface.
+ *
+ * @static
+ * @category udhcpc
+ *
+ */
+ const udhcpc = module.exports = {
+  exec: child_process.exec,
+  disable: disable,
+  enable: enable
+};

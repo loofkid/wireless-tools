@@ -5,7 +5,7 @@
   "author": "Christopher M. Baker, Kent Loofbourrow",
   "license": "MIT",
   "homepage": "https://github.com/loofkid/wireless-tools",
-  "main": "wireless-tools.js",
+  "main": "wireless-tools.mjs",
   "keywords": [
     "wireless",
     "tools",
@@ -50,6 +50,11 @@
       "name": "Wink",
       "email": "support@wink.com",
       "url": "https://www.wink.com/"
+    },
+    {
+      "name": "Kent Loofbourrow",
+      "email": "kent.loofbourrow@loofmail.com",
+      "url": "https://github.com/loofkid"
     }
   ],
   "dependencies": {

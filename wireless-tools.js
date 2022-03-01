@@ -20,15 +20,15 @@
  * SOFTWARE.
  *
  */
-import hostapd from './hostapd';
-import ifconfig from './ifconfig';
-import iwconfig from './iwconfig';
-import iwlist from './iwlist';
-import iw from './iw';
-import udhcpc from './udhcpc';
-import udhcpd from './udhcpd';
-import wpa_cli from './wpa_cli';
-import wpa_supplicant from './wpa_supplicant';
+import hostapd from './hostapd.js';
+import ifconfig from './ifconfig.js';
+import iwconfig from './iwconfig.js';
+import iwlist from './iwlist.js';
+import iw from './iw.js';
+import udhcpc from './udhcpc.js';
+import udhcpd from './udhcpd.js';
+import wpa_cli from './wpa_cli.js';
+import wpa_supplicant from './wpa_supplicant.js';
 
 export default {
   hostapd: hostapd,

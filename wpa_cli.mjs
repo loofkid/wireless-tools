@@ -252,9 +252,9 @@ const parse_list_networks_result = (block) => {
     // networksList.splice(networksList.length - 1, 1); //Remove footer
 
     for (const networkIndex in networksList) {
-        tempNetworkJson = {};
+        let tempNetworkJson = {};
 
-        parameters = networksList[networkIndex].split("\t");
+        const parameters = networksList[networkIndex].split("\t");
         tempNetworkJson = {
             network_id: parameters[0],
             ssid: parameters[1],

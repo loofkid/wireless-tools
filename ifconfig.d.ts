@@ -14,9 +14,9 @@ export interface Status {
 
 export interface Options {
     interface: string,
-    ipv4_address: string,
-    ipv4_broadcast: string,
-    ipv4_subnet_mask: string,
+    ipv4_address?: string,
+    ipv4_broadcast?: string,
+    ipv4_subnet_mask?: string,
 }
 
 declare interface IfConfig {

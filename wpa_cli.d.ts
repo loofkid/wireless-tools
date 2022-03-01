@@ -34,6 +34,7 @@ declare interface WpaCli {
     enable_network: typeof enable_network,
     disable_network: typeof disable_network,
     remove_network: typeof remove_network,
+    select_network: typeof select_network,
     scan: typeof scan,
     scan_results: typeof scan_results,
     save_config: typeof save_config,
@@ -51,6 +52,7 @@ export const set_network: (interface: string, id: string, variable: string, valu
 export const enable_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const disable_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const remove_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const select_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const scan: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const scan_results: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const save_config: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;

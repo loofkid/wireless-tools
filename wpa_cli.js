@@ -523,7 +523,6 @@ const save_config = (interface, callback) => {
  *
  */
  const wpa_cli = module.exports = {
-    exec: child_process.exec,
     status: status,
     bssid: bssid,
     reassociate: reassociate,

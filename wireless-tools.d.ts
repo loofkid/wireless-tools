@@ -5,7 +5,7 @@ import { IwConfig, Status as IwConfigStatus } from "./iwconfig";
 import { IwList, Network as IwListNetwork, Options as IwListOptions } from "./iwlist";
 import { UdhcpC, Options as UdhcpCOptions} from "./udhcpc";
 import { UdhcpD, Options as UdhcpDOptions } from "./udhcpd";
-import { WpaCli, Status as WpaCliStatus } from "./wpa_cli";
+import { WpaCli, Status as WpaCliStatus, Network as WpaCliNetwork } from "./wpa_cli";
 import { WpaSupplicant, EnableOptions as WpaSupplicantEnableOptions, ManualOptions as WpaSupplicantManualOptions } from "./wpa_supplicant";
 
 export {
@@ -20,6 +20,7 @@ export {
     UdhcpCOptions,
     UdhcpDOptions,
     WpaCliStatus,
+    WpaCliNetwork,
     WpaSupplicantEnableOptions,
     WpaSupplicantManualOptions,
 };

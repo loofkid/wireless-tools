@@ -6,6 +6,7 @@
   "license": "MIT",
   "homepage": "https://github.com/loofkid/wireless-tools",
   "main": "wireless-tools.mjs",
+  "type": "module",
   "keywords": [
     "wireless",
     "tools",

@@ -42,7 +42,7 @@ declare interface WpaCli {
 
 export const wpacli: WpaCli;
 
-export const status: (interface: string, callback?: (err: Error, status: Status) => any) => ChildProcess | Promise<Status[]>;
+export const status: (interface: string, callback?: (err: Error, status: Status) => any) => ChildProcess | Promise<Status>;
 export const bssid: (interface: string, ap: string, ssid: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const reassociate: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
 export const set: (interface: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;

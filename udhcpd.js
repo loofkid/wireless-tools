@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * Recursively expand `options` into `lines` with a `prefix`.
@@ -99,7 +99,7 @@ const expand = (options) => {
  * });
  *
  */
-const enable = (options, callback) => {
+export const enable = (options, callback) => {
   if (callback) {
     const file = options.interface + '-udhcpd.conf';
 
@@ -107,10 +107,10 @@ const enable = (options, callback) => {
       'cat <<EOF >' + file + ' && udhcpd ' + file + ' && rm -f ' + file,
       expand(options));
 
-    return child_process.exec(commands.join('\n'), callback);
+    return exec(commands.join('\n'), callback);
   }
   else {
-    return util.promisify(enable)(options);
+    return promisify(enable)(options);
   }
 }
 
@@ -120,7 +120,7 @@ const enable = (options, callback) => {
  *
  * @static
  * @category udhcpd
- * @param {string} interface The network interface.
+ * @param {string} interfaceName The network interface.
  * @param {function} [callback] The callback function.
  * @returns {process|Promise<void>} The child process.
  * @example
@@ -132,13 +132,13 @@ const enable = (options, callback) => {
  * });
  *
  */
-const disable = (interface, callback) => {
+export const disable = (interfaceName, callback) => {
   if(callback) {
-    var file = interface + '-udhcpd.conf';
-    return child_process.exec('kill `pgrep -f "^udhcpd ' + file + '"` || true', callback);
+    var file = interfaceName + '-udhcpd.conf';
+    return exec('kill `pgrep -f "^udhcpd ' + file + '"` || true', callback);
   }
   else {
-    return util.promisify(disable)(interface);
+    return promisify(disable)(interfaceName);
   }
 }
 
@@ -150,8 +150,9 @@ const disable = (interface, callback) => {
  * @category udhcpd
  *
  */
- const udhcpd = module.exports = {
-  exec: child_process.exec,
+export const udhcpd = {
   disable: disable,
   enable: enable
 }
+
+export default udhcpd;

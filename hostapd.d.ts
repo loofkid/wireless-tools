@@ -15,5 +15,5 @@ declare interface HostAPd {
 
 export const hostapd: HostAPd;
 
-export const disable: (interface: string, callback?: (err: Error) => any) => NodeJS.Process | Promise<void>;
+export const disable: (interfaceName: string, callback?: (err: Error) => any) => NodeJS.Process | Promise<void>;
 export const enable: (interface: Options, callback?: (err: Error) => any) => NodeJS.Process | Promise<void>;

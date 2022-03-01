@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util')
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * The **hostpad disable** command is used to stop hosting an access point
@@ -30,7 +30,7 @@ const util = require('util')
  *
  * @static
  * @category hostapd
- * @param {string} interface The network interface of the access point.
+ * @param {string} interfaceName The network interface of the access point.
  * @param {function} [callback] The callback function.
  * @returns {process|Promise<void>} The child process.
  * @example
@@ -42,15 +42,15 @@ const util = require('util')
  * });
  *
  */
-const disable = (interface, callback) => {
+export const disable = (interfaceName, callback) => {
   if (callback) {
-    var file = interface + '-hostapd.conf';
+    var file = interfaceName + '-hostapd.conf';
 
-    return child_process.exec('kill `pgrep -f "^hostapd -B ' + file + '"` || true',
+    return exec('kill `pgrep -f "^hostapd -B ' + file + '"` || true',
       callback);
   }
   else {
-    return util.promisify(disable)(interface);
+    return promisify(disable)(interfaceName);
   }
 }
 
@@ -82,7 +82,7 @@ const disable = (interface, callback) => {
  * });
  *
  */
-const enable = (options, callback) => {
+export const enable = (options, callback) => {
   if (callback) {
     var file = options.interface + '-hostapd.conf';
 
@@ -94,10 +94,10 @@ const enable = (options, callback) => {
       commands.push(key + '=' + options[key]);
     });
 
-    return child_process.exec(commands.join('\n'), callback);
+    return exec(commands.join('\n'), callback);
   }
   else {
-    return util.promisify(enable)(options);
+    return promisify(enable)(options);
   }
 }
 
@@ -108,7 +108,9 @@ const enable = (options, callback) => {
  * @category hostapd
  *
  */
- const hostapd = module.exports = {
+export const hostapd = {
   disable: disable,
   enable: enable,
 };
+
+export default hostapd;

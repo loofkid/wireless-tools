@@ -19,4 +19,4 @@ declare interface UdhcpD {
 export const udhcpd: UdhcpD;
 
 export const enable: (options: Options, callback?: (err: Error) => any) => ChildProcess | Promise<void>;
-export const disable: (interface: string, callback?: (err: Error) => any) => ChildProcess | Promise<void>;
+export const disable: (interfaceName: string, callback?: (err: Error) => any) => ChildProcess | Promise<void>;

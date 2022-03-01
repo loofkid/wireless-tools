@@ -21,5 +21,5 @@ declare interface IwConfig {
 
 export const iwconfig: IwConfig;
 
-export const status: (interface: string, callback?: (err: Error, data: Status) => any) => Promise<Status> | ChildProcess;
+export const status: (interfaceName: string, callback?: (err: Error, data: Status) => any) => Promise<Status> | ChildProcess;
 export const statusAll: (callback?: (err: Error, data: Status[]) => any) => Promise<Status>[] | ChildProcess;

@@ -42,17 +42,17 @@ declare interface WpaCli {
 
 export const wpacli: WpaCli;
 
-export const status: (interface: string, callback?: (err: Error, status: Status) => any) => ChildProcess | Promise<Status>;
-export const bssid: (interface: string, ap: string, ssid: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const reassociate: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const set: (interface: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const list_networks: (interface: string, callback?: (err: Error, networks: Network[]) => any) => ChildProcess | Promise<Network[]>;
-export const add_network: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const set_network: (interface: string, id: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const enable_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const disable_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const remove_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const select_network: (interface: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const scan: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const scan_results: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const save_config: (interface: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const status: (interfaceName: string, callback?: (err: Error, status: Status) => any) => ChildProcess | Promise<Status>;
+export const bssid: (interfaceName: string, ap: string, ssid: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const reassociate: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const set: (interfaceName: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const list_networks: (interfaceName: string, callback?: (err: Error, networks: Network[]) => any) => ChildProcess | Promise<Network[]>;
+export const add_network: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const set_network: (interfaceName: string, id: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const enable_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const disable_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const remove_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const select_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const scan: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const scan_results: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const save_config: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;

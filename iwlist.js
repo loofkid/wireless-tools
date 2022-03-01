@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * Returns a truthy if the network has an ssid; falsy otherwise.
@@ -278,13 +278,13 @@ const parse_scan = (show_hidden, callback) => {
  * ]
  *
  */
-const scan = (options, callback) => {
-  let interface, show_hidden;
+export const scan = (options, callback) => {
+  let interfaceName, show_hidden;
   if (typeof options === 'string') {
-    interface = options;
+    interfaceName = options;
     show_hidden = false;
   } else {
-    interface = options.iface;
+    interfaceName = options.iface;
     show_hidden = options.show_hidden || false;
   }
 
@@ -295,10 +295,10 @@ const scan = (options, callback) => {
   }
   
   if (callback) {
-    child_process.exec('iwlist ' + interface + ' scan' + extra_params, parse_scan(show_hidden, callback));
+    exec('iwlist ' + interfaceName + ' scan' + extra_params, parse_scan(show_hidden, callback));
   }
   else {
-    return util.promisify(scan)(options);
+    return promisify(scan)(options);
   }
 }
 
@@ -310,6 +310,8 @@ const scan = (options, callback) => {
  * @category iwlist
  *
  */
- const iwlist = module.exports = {
+export const iwlist = {
   scan: scan
 };
+
+export default iwlist;

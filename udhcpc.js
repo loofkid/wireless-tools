@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * The **udhcpc disable** command is used to stop a dhcp client on a
@@ -30,7 +30,7 @@ const util = require('util');
  *
  * @static
  * @category udhcpc
- * @param {string} interface The network interface.
+ * @param {string} interfaceName The network interface.
  * @param {function} [callback] The callback function.
  * @returns {process|Promise<void>} The child process.
  * @example
@@ -42,13 +42,13 @@ const util = require('util');
  * });
  *
  */
-const disable = (interface, callback) => {
+export const disable = (interfaceName, callback) => {
   if (callback) {
-    const command = 'kill `pgrep -f "^udhcpc -i ' + interface + '"` || true';
-    return child_process.exec(command, callback);
+    const command = 'kill `pgrep -f "^udhcpc -i ' + interfaceName + '"` || true';
+    return exec(command, callback);
   }
   else {
-    return util.promisify(disable)(interface);
+    return promisify(disable)(interfaceName);
   }
 }
 
@@ -74,13 +74,13 @@ const disable = (interface, callback) => {
  * });
  *
  */
-const enable = (options, callback) => {
+export const enable = (options, callback) => {
   if (callback) {
     const command = 'udhcpc -i ' + options.interface + ' -n';
-    return child_process.exec(command, callback);  
+    return exec(command, callback);  
   }
   else {
-    return util.promisify(enable)(options);
+    return promisify(enable)(options);
   }
 }
 
@@ -92,8 +92,9 @@ const enable = (options, callback) => {
  * @category udhcpc
  *
  */
- const udhcpc = module.exports = {
-  exec: child_process.exec,
+export const udhcpc = {
   disable: disable,
   enable: enable
 };
+
+export default udhcpc;

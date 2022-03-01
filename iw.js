@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * Returns a truthy if the network has an ssid; falsy otherwise.
@@ -168,21 +168,21 @@ const parse_scan = (show_hidden, callback) => {
  * @param {function} [callback] The callback function.
  * @returns {void|Promise<Network[]>} Void or a Promise of Network objects.
  */
-const scan = (options, callback) => {
-  let interface, show_hidden;
+export const scan = (options, callback) => {
+  let interfaceName, show_hidden;
   if (typeof options === 'string') {
-    interface = options;
+    interfaceName = options;
     show_hidden = false;
   } else {
-    interface = options.iface;
+    interfaceName = options.iface;
     show_hidden = options.show_hidden || false;
   }
 
   if (callback) {
-    child_process.exec('iw dev ' + interface + ' scan', parse_scan(show_hidden, callback));
+    exec('iw dev ' + interfaceName + ' scan', parse_scan(show_hidden, callback));
   }
   else {
-    return util.promisify(scan)(options);
+    return promisify(scan)(options);
   }
 }
 
@@ -193,6 +193,8 @@ const scan = (options, callback) => {
  * @category iw
  *
  */
- const iw = module.exports = {
+export const iw = {
   scan: scan
 };
+
+export default iw;

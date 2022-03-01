@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * Parses the status for a wpa network interface.
@@ -273,7 +273,7 @@ const parse_list_networks_result = (block) => {
  * @private
  * @static
  * @category wpa
- * @param {string} interface The wireless network interface.
+ * @param {string} interfaceName The wireless network interface.
  * @param {function} [callback] The callback function.
  * @example
  *
@@ -320,36 +320,36 @@ const parse_list_networks_result = (block) => {
  * OK
  *
  */
-const status = (interface, callback) => {
+export const status = (interfaceName, callback) => {
     if (callback) {
-        const command = [ 'wpa_cli -i', interface, 'status'].join(' ');
-        return child_process.exec(command, parse_status_interface(callback));
+        const command = [ 'wpa_cli -i', interfaceName, 'status'].join(' ');
+        return exec(command, parse_status_interface(callback));
     }
     else {
-        return util.promisify(status)(interface);
+        return promisify(status)(interfaceName);
     }
 }
 
-const bssid = (interface, ap, ssid, callback) => {
+export const bssid = (interfaceName, ap, ssid, callback) => {
     if (callback) {
-        const command = ['wpa_cli -i', interface, 'bssid', ssid, ap].join(' ');
-        return child_process.exec(command, parse_command_interface(callback));
+        const command = ['wpa_cli -i', interfaceName, 'bssid', ssid, ap].join(' ');
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(bssid)(interface, ap, ssid);
+        return promisify(bssid)(interfaceName, ap, ssid);
     }
 }
 
-const reassociate = (interface, callback) => {
+export const reassociate = (interfaceName, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-            interface,
+            interfaceName,
             'reassociate'].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(reassociate)(interface);
+        return promisify(reassociate)(interfaceName);
     }
 }
 
@@ -364,154 +364,154 @@ const reassociate = (interface, callback) => {
     // enable_network: enable_network
 */
 
-const set = (interface, variable, value, callback) => {
+export const set = (interfaceName, variable, value, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-            interface,
+            interfaceName,
             'set',
             variable,
             value ].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(set)(interface, variable, value);
+        return promisify(set)(interfaceName, variable, value);
     }
 }
 
 
-const list_networks = (interface, callback) => {
+export const list_networks = (interfaceName, callback) => {
     if (callback) {
-        const command = ['wpa_cli -i', interface, 'list_networks'].join(' ');
+        const command = ['wpa_cli -i', interfaceName, 'list_networks'].join(' ');
 
-        return child_process.exec(command, parse_list_networks_block(callback));
+        return exec(command, parse_list_networks_block(callback));
     }
     else {
-        return util.promisify(list_networks)(interface);
+        return promisify(list_networks)(interfaceName);
     }
 }
 
-const add_network = (interface, callback) => {
+export const add_network = (interfaceName, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-                    interface,
+                    interfaceName,
                     'add_network' ].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(add_network)(interface);
+        return promisify(add_network)(interfaceName);
     }
 }
 
-const set_network = (interface, id, variable, value, callback) => {
+export const set_network = (interfaceName, id, variable, value, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-                    interface,
+                    interfaceName,
                     'set_network',
                     id,
                     variable,
                     value ].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(set_network)(interface, id, variable, value);
+        return promisify(set_network)(interfaceName, id, variable, value);
     }
 }
 
-const enable_network = (interface, id, callback) => {
+export const enable_network = (interfaceName, id, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-                    interface,
+                    interfaceName,
                     'enable_network',
                     id ].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(enable_network)(interface, id);
+        return promisify(enable_network)(interfaceName, id);
     }
 }
 
-const disable_network = (interface, id, callback) => {
+export const disable_network = (interfaceName, id, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-                    interface,
+                    interfaceName,
                     'disable_network',
                     id ].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(disable_network)(interface, id);
+        return promisify(disable_network)(interfaceName, id);
     }
 }
 
-const remove_network = (interface, id, callback) => {
+export const remove_network = (interfaceName, id, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-                    interface,
+                    interfaceName,
                     'remove_network',
                     id ].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(remove_network)(interface, id);
+        return promisify(remove_network)(interfaceName, id);
     }
 }
 
-const select_network = (interface, id, callback) => {
+export const select_network = (interfaceName, id, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-            interface,
+            interfaceName,
             'select_network',
             id ].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(select_network)(interface, id);
+        return promisify(select_network)(interfaceName, id);
     }
 }
 
-const scan = (interface, callback) => {
+export const scan = (interfaceName, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-            interface,
+            interfaceName,
             'scan'].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(scan)(interface);
+        return promisify(scan)(interfaceName);
     }
 }
 
-const scan_results = (interface, callback) => {
+export const scan_results = (interfaceName, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-            interface,
+            interfaceName,
             'scan_results'].join(' ');
 
-        return child_process.exec(command, parse_scan_results_interface(callback));
+        return exec(command, parse_scan_results_interface(callback));
     }
     else {
-        return util.promisify(scan_results)(interface);
+        return promisify(scan_results)(interfaceName);
     }
 }
 
-const save_config = (interface, callback) => {
+export const save_config = (interfaceName, callback) => {
     if (callback) {
         const command = ['wpa_cli -i',
-            interface,
+            interfaceName,
             'save_config'].join(' ');
 
-        return child_process.exec(command, parse_command_interface(callback));
+        return exec(command, parse_command_interface(callback));
     }
     else {
-        return util.promisify(save_config)(interface);
+        return promisify(save_config)(interfaceName);
     }
 }
 
@@ -522,7 +522,7 @@ const save_config = (interface, callback) => {
  * @category wpa_cli
  *
  */
- const wpa_cli = module.exports = {
+export const wpa_cli = {
     status: status,
     bssid: bssid,
     reassociate: reassociate,
@@ -538,3 +538,5 @@ const save_config = (interface, callback) => {
     scan_results: scan_results,
     save_config: save_config
 };
+
+export default wpa_cli;

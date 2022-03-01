@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util')
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * Parses the status for a single network interface.
@@ -127,7 +127,7 @@ const parse_status_interface = (callback) => {
  *
  * @static
  * @category ifconfig
- * @param {string} interface The network interface.
+ * @param {string} interfaceName The network interface.
  * @param {function} [callback] The callback function.
  * @returns {void|Promise<Status>} Void or a promise of a Status object.
  * @example
@@ -153,12 +153,12 @@ const parse_status_interface = (callback) => {
  *   }
  *
  */
-const status = (interface, callback) => {
+export const status = (interfaceName, callback) => {
   if (callback) {
-      child_process.exec('ifconfig ' + interface, parse_status_interface(callback));  
+      exec('ifconfig ' + interfaceName, parse_status_interface(callback));  
   }
   else {
-    return util.promisify(status)(interface);
+    return promisify(status)(interfaceName);
   }
 }
 
@@ -215,12 +215,12 @@ const status = (interface, callback) => {
  * ]
  *
  */
-const statusAll = (callback) => {
+export const statusAll = (callback) => {
   if (callback) {
-    child_process.exec('ifconfig -a', parse_status(callback)); 
+    exec('ifconfig -a', parse_status(callback)); 
   }
   else {
-    return util.promisify(statusAll);
+    return promisify(statusAll);
   }
 }
 
@@ -229,7 +229,7 @@ const statusAll = (callback) => {
  *
  * @static
  * @category ifconfig
- * @param {string} interface The network interface.
+ * @param {string} interfaceName The network interface.
  * @param {function} [callback] The callback function.
  * @returns {process|Promise<void>} The child process or a Promise.
  * @example
@@ -241,12 +241,12 @@ const statusAll = (callback) => {
  * });
  *
  */
-const down = (interface, callback) => {
+export const down = (interfaceName, callback) => {
   if (callback) {
-    return child_process.exec('ifconfig ' + interface + ' down', callback);
+    return exec('ifconfig ' + interfaceName + ' down', callback);
   }
   else {
-    return util.promisify(down)(interface);
+    return promisify(down)(interfaceName);
   }
 }
 
@@ -273,16 +273,16 @@ const down = (interface, callback) => {
  * });
  *
  */
-const up = (options, callback) => {
+export const up = (options, callback) => {
   if (callback) {
-    return child_process.exec('ifconfig ' + options.interface +
+    return exec('ifconfig ' + options.interface +
       ' ' + options.ipv4_address +
       ' netmask ' + options.ipv4_subnet_mask +
       ' broadcast ' + options.ipv4_broadcast +
       ' up', callback);
   }
   else {
-    return util.promisify(up)(options);
+    return promisify(up)(options);
   }
 }
 
@@ -293,9 +293,11 @@ const up = (options, callback) => {
  * @category ifconfig
  *
  */
- const ifconfig = module.exports = {
+ export const ifconfig = {
   status: status,
   statusAll: statusAll,
   down: down,
   up: up
 };
+
+export default ifconfig;

@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * The **wpa_supplicant disable** command is used to disconnect from
@@ -30,7 +30,7 @@ const util = require('util');
  *
  * @static
  * @category wpa_supplicant
- * @param {string} interface The network interface.
+ * @param {string} interfaceName The network interface.
  * @param {function} callback The callback function.
  * @returns {process|Promise<void>} The child process.
  * @example
@@ -42,15 +42,15 @@ const util = require('util');
  * });
  *
  */
-const disable = (interface, callback) => {
+export const disable = (interfaceName, callback) => {
   if (callback) {
     const command = 'kill `pgrep -f "wpa_supplicant -i ' +
-      interface + ' .*"` || true';
+      interfaceName + ' .*"` || true';
 
-    return child_process.exec(command, callback);
+    return exec(command, callback);
   }
   else {
-    return util.promisify(disable)(interface);
+    return promisify(disable)(interfaceName);
   }
 }
 
@@ -79,7 +79,7 @@ const disable = (interface, callback) => {
  * });
  *
  */
-const enable = (options, callback) => {
+export const enable = (options, callback) => {
   if (callback) {
     const file = options.interface + '-wpa_supplicant.conf';
 
@@ -87,10 +87,10 @@ const enable = (options, callback) => {
       + '" > ' + file + ' && wpa_supplicant -i ' + options.interface + ' -B -D '
       + options.driver + ' -c ' + file + ' && rm -f ' + file;
 
-    return child_process.exec(command, callback);
+    return exec(command, callback);
   }
   else {
-    return util.promisify(enable)(options);
+    return promisify(enable)(options);
   }
 }
 
@@ -103,7 +103,7 @@ const enable = (options, callback) => {
  *     drivers: [ 'nl80211', 'wext' ]
  * }
  */
-const manual = (options, callback) => {
+export const manual = (options, callback) => {
   if (callback) {
     const command = [
       'wpa_supplicant',
@@ -113,10 +113,10 @@ const manual = (options, callback) => {
       '-C /run/wpa_supplicant'
     ].join(' ');
 
-    return child_process.exec(command, callback);
+    return exec(command, callback);
   }
   else {
-    return util.promisify(manual)(options);
+    return promisify(manual)(options);
   }
 }
 
@@ -128,9 +128,10 @@ const manual = (options, callback) => {
  * @category wpa_supplicant
  *
  */
- const wpa_supplicant = module.exports = {
-  exec: child_process.exec,
+export const wpa_supplicant = {
   disable: disable,
   enable: enable,
   manual: manual
 };
+
+export default wpa_supplicant;

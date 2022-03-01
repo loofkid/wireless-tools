@@ -20,15 +20,36 @@
  * SOFTWARE.
  *
  */
+import hostapd from './hostapd.js';
+import ifconfig from './ifconfig.js';
+import iwconfig from './iwconfig.js';
+import iwlist from './iwlist.js';
+import iw from './iw.js';
+import udhcpc from './udhcpc.js';
+import udhcpd from './udhcpd.js';
+import wpa_cli from './wpa_cli.js';
+import wpa_supplicant from './wpa_supplicant.js';
 
-var wireless_tools = module.exports = {
-  hostapd: require('./hostapd'),
-  ifconfig: require('./ifconfig'),
-  iwconfig: require('./iwconfig'),
-  iwlist: require('./iwlist'),
-  iw: require('./iw'),
-  udhcpc: require('./udhcpc'),
-  udhcpd: require('./udhcpd'),
-  wpa: require('./wpa_cli'),
-  wpa_supplicant: require('./wpa_supplicant')
+export default {
+  hostapd: hostapd,
+  ifconfig: ifconfig,
+  iwconfig: iwconfig,
+  iwlist: iwlist,
+  iw: iw,
+  udhcpc: udhcpc,
+  udhcpd: udhcpd,
+  wpa: wpa_cli,
+  wpa_supplicant: wpa_supplicant,
 };
+
+export {
+  hostapd,
+  ifconfig,
+  iwconfig,
+  iwlist,
+  iw,
+  udhcpc,
+  udhcpd,
+  wpa_cli,
+  wpa_supplicant,
+}

@@ -21,8 +21,8 @@
  *
  */
 
-const child_process = require('child_process');
-const util = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * Parses the status for a single wireless network interface.
@@ -126,7 +126,7 @@ const parse_status_interface = (callback) => {
  * @private
  * @static
  * @category iwconfig
- * @param {string} interface The wireless network interface.
+ * @param {string} interfaceName The wireless network interface.
  * @param {function} [callback] The callback function.
  * @returns {void|Promise<Status>} Void or the Promise of a Status object.
  * @example
@@ -154,13 +154,13 @@ const parse_status_interface = (callback) => {
  * ]
  *
  */
-const status = (interface, callback) => {
+export const status = (interfaceName, callback) => {
   if (callback) {
-    return child_process.exec('iwconfig ' + interface,
+    return exec('iwconfig ' + interfaceName,
       parse_status_interface(callback));
   }
   else {
-    return util.promisify(status)(interface);
+    return promisify(status)(interfaceName);
   }
 }
 /**
@@ -206,12 +206,12 @@ const status = (interface, callback) => {
  * ]
  *
  */
-const statusAll = (callback) => {
+export const statusAll = (callback) => {
   if (callback) {
-    return child_process.exec('iwconfig', parse_status(callback));
+    return exec('iwconfig', parse_status(callback));
   }
   else {
-    return util.promisify(statusAll);
+    return promisify(statusAll);
   }
 }
 
@@ -222,7 +222,9 @@ const statusAll = (callback) => {
  * @category iwconfig
  *
  */
- const iwconfig = module.exports = {
+ export const iwconfig = {
   status: status,
   statusAll: statusAll,
 };
+
+export default iwconfig;

@@ -11,5 +11,5 @@ declare interface UdhcpC {
 
 export const udhcpc: UdhcpC;
 
-export const disable: (interfaceName: string, callback?: (err: Error) => any) => ChildProcess | Promise<void>;
-export const enable: (options: Options, callback?: (err: Error) => any) => ChildProcess | Promise<void>;
+export const disable: <T extends ((err: Error) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, void, ChildProcess>;
+export const enable: <T extends ((err: Error) => any) | undefined = undefined>(options: Options, callback?: T) => TypeOrPromise<T, void, ChildProcess>;

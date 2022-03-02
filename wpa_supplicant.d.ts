@@ -20,6 +20,6 @@ declare interface WpaSupplicant {
 
 export const wpa_supplicant: WpaSupplicant;
 
-export const disable: (interfaceName: string, callback?: (err: Error) => any) => ChildProcess | Promise<void>;
-export const enable: (options: EnableOptions, callback?: (err: Error) => any) => ChildProcess | Promise<void>;
-export const manual: (options: ManualOptions, callback?: (err: Error) => any) => ChildProcess | Promise<void>;
+export const disable: <T extends ((err: Error) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, void, ChildProcess>;
+export const enable: <T extends ((err: Error) => any) | undefined = undefined>(options: EnableOptions, callback?: T) => TypeOrPromise<T, void, ChildProcess>;
+export const manual: <T extends ((err: Error) => any) | undefined = undefined>(options: ManualOptions, callback?: T) => TypeOrPromise<T, void, ChildProcess>;

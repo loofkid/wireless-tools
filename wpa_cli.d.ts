@@ -42,17 +42,17 @@ declare interface WpaCli {
 
 export const wpacli: WpaCli;
 
-export const status: (interfaceName: string, callback?: (err: Error, status: Status) => any) => ChildProcess | Promise<Status>;
-export const bssid: (interfaceName: string, ap: string, ssid: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const reassociate: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const set: (interfaceName: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const list_networks: (interfaceName: string, callback?: (err: Error, networks: Network[]) => any) => ChildProcess | Promise<Network[]>;
-export const add_network: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const set_network: (interfaceName: string, id: string, variable: string, value: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const enable_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const disable_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const remove_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const select_network: (interfaceName: string, id: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const scan: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const scan_results: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
-export const save_config: (interfaceName: string, callback?: (err: Error, data: unknown) => any) => ChildProcess | Promise<unknown>;
+export const status: <T extends ((err: Error, status: Status) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, Status, ChildProcess>;
+export const bssid: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, ap: string, ssid: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const reassociate: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const set: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, variable: string, value: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const list_networks: <T extends ((err: Error, networks: Network[]) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, Network[], ChildProcess>;
+export const add_network: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const set_network: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, id: string, variable: string, value: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const enable_network: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, id: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const disable_network: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, id: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const remove_network: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, id: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const select_network: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, id: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const scan: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const scan_results: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;
+export const save_config: <T extends ((err: Error, data: unknown) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, unknown, ChildProcess>;

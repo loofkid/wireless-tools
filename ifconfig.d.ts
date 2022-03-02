@@ -28,7 +28,7 @@ declare interface IfConfig {
 
 export const ifconfig: IfConfig;
 
-export const status: (interfaceName: string, callback?: (err: Error, data: Status) => any) => Promise<Status> | void;
-export const statusAll: (callback?: (err: Error, data: Status[]) => any) => Promise<Status> | void;
-export const down: (interfaceName: string, callback?: (err: Error) => any) => Promise<void> | void;
-export const up: (options: Options, callback?: (err: Error) => any) => Promise<void> | void;
+export const status: <T extends ((err: Error, data: Status) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, Status, void>;
+export const statusAll: <T extends ((err: Error, data: Status[]) => any) | undefined = undefined>(callback?: T) => TypeOrPromise<T, Status[], void>;
+export const down: <T extends ((err: Error) => any) | undefined = undefined>(interfaceName: string, callback?: T) => TypeOrPromise<T, void, void>;
+export const up: <T extends ((err: Error) => any) | undefined = undefined>(options: Options, callback?: T) => TypeOrPromise<T, void, void>;

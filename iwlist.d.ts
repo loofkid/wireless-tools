@@ -21,4 +21,4 @@ declare interface IwList {
 
 export const iwlist: IwList;
 
-export const scan: (options: Options | string, callback?: (err: Error, networks: Network[]) => any) => Promise<Network[]> | void;
+export const scan: <T extends ((err: Error, networks: Network[]) => any) | undefined = undefined>(options: Options | string, callback?: T) => TypeOrPromise<T, Network[], void>;

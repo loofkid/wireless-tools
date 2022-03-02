@@ -19,4 +19,4 @@ declare interface Iw {
 
 export const iw: Iw;
 
-export const scan: (options: string | Options, callback?: (err: Error, networks: Network[]) => any) => Promise<void> | void;
+export const scan: <T extends ((err: Error, networks: Network[]) => any) | undefined = undefined>(options: string | Options, callback?: T) => TypeOrPromise<T, Network[], void>;
